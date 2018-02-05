@@ -11,20 +11,25 @@ import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import org.apache.log4j.Logger;
 
-@Component
+@Service("bookService")
+@Transactional
 public class BookDaoImpl implements BookDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
 
     private ProjectionList bookProjection;
+
+    protected static Logger logger = Logger.getLogger("service");
 
     private List<Book> books;
 
@@ -47,6 +52,8 @@ public class BookDaoImpl implements BookDAO {
 
     @Transactional
     public List<Book> getBooks() {
+
+        logger.debug("Retrieving all books");
 
         Session session = sessionFactory.getCurrentSession();
         //Transaction tx = session.beginTransaction();
@@ -78,6 +85,9 @@ public class BookDaoImpl implements BookDAO {
 
     @Transactional
     public List<Book> getBooks(String searchString) {
+
+        logger.debug("Retrieving searching books");
+
         String[] params = searchString.split("=");
         List<Book> books = null;
 
@@ -94,5 +104,53 @@ public class BookDaoImpl implements BookDAO {
         }
         return books;
     }
+
+    public Book get( Integer id ) {
+        Session session = sessionFactory.getCurrentSession();
+        Book book = (Book) session.get(Book.class, id);
+        return book;
+    }
+
+    public void add(Book book) {
+        logger.debug("Adding new book");
+        Session session = sessionFactory.getCurrentSession();
+        session.save(book);
+    }
+
+
+    public void delete(Integer id) {
+        logger.debug("Deleting existing book");
+
+        // Retrieve session from Hibernate
+        Session session = sessionFactory.getCurrentSession();
+
+        // Retrieve existing book first
+        Book book = (Book) session.get(Book.class, id);
+
+        // Delete
+        session.delete(book);
+    }
+
+    public void edit(Book book) {
+        logger.debug("Editing existing book");
+
+        // Retrieve session from Hibernate
+        Session session = sessionFactory.getCurrentSession();
+
+        // Retrieve existing book via id
+        Book existingBook = (Book) session.get(Book.class, book.getId());
+
+        // Assign updated values to this book
+        existingBook.setAuthor(book.getAuthor());
+        existingBook.setDescription(book.getDescription());
+        existingBook.setIsbn(book.getIsbn());
+        existingBook.setPrintYear(book.getPrintYear());
+        existingBook.setReadAlready(book.getReadAlready());
+        existingBook.setTitle(book.getTitle());
+
+        // Save updates
+        session.save(existingBook);
+    }
+
 }
 

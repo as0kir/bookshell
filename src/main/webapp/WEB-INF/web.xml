@@ -30,24 +30,6 @@
         <url-pattern>/app/*</url-pattern>
     </servlet-mapping>
 
-    <!--<servlet>
-        <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <! Just here so the JSF implementation can initialize  >
-    <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>*.faces</url-pattern>
-    </servlet-mapping>
-
-
-    <context-param>
-        <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
-        <param-value>.xhtml</param-value>
-    </context-param>-->
-
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
