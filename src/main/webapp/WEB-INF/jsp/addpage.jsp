@@ -12,7 +12,7 @@
 
 <h1>Create New Book</h1>
 
-<c:url var="saveUrl" value="/app/main/books/add" />
+<c:url var="saveUrl" value="/bookshell/main/books/add" />
 <form:form modelAttribute="bookAttribute" method="POST" action="${saveUrl}">
   <table>
     <tr>

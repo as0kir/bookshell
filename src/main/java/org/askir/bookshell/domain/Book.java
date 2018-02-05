@@ -1,4 +1,4 @@
-package org.askir.bookshell.entities;
+package org.askir.bookshell.domain;
 
 public class Book {
     private int id;

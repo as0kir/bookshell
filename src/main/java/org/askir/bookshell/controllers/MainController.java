@@ -1,8 +1,9 @@
 package org.askir.bookshell.controllers;
 
 import org.apache.log4j.Logger;
-import org.askir.bookshell.dao.impl.BookDaoImpl;
-import org.askir.bookshell.entities.Book;
+import org.askir.bookshell.domain.Book;
+import org.askir.bookshell.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,7 +21,7 @@ public class MainController {
     protected static Logger logger = Logger.getLogger("controller");
 
     @Resource(name="bookService")
-    private BookDaoImpl bookService;
+    private BookService bookService;
 
     @RequestMapping(value = "/books", method = RequestMethod.GET)
     public String getBooks(Model model) {

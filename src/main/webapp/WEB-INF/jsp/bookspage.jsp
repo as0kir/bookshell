@@ -10,7 +10,7 @@
 <body>
 <h1>Books</h1>
 
-<c:url var="addUrl" value="/app/main/books/add" />
+<c:url var="addUrl" value="/bookshell/main/books/add" />
 <table style="border: 1px solid; width: 500px; text-align:center">
   <thead style="background:#fcf">
   <tr>
@@ -22,8 +22,8 @@
   </thead>
   <tbody>
   <c:forEach items="${books}" var="book">
-    <c:url var="editUrl" value="/app/main/books/edit?id=${book.id}" />
-    <c:url var="deleteUrl" value="/app/main/books/delete?id=${book.id}" />
+    <c:url var="editUrl" value="/bookshell/main/books/edit?id=${book.id}" />
+    <c:url var="deleteUrl" value="/bookshell/main/books/delete?id=${book.id}" />
     <tr>
       <td><c:out value="${book.title}" /></td>
       <td><c:out value="${book.author}" /></td>

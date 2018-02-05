@@ -1,30 +1,28 @@
-package org.askir.bookshell.dao.impl;
+package org.askir.bookshell.service;
 
-import org.askir.bookshell.dao.interfaces.BookDAO;
-import org.askir.bookshell.entities.Book;
+import org.apache.log4j.Logger;
+import org.askir.bookshell.domain.Book;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.*;
 import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
-import org.apache.log4j.Logger;
 
 @Service("bookService")
 @Transactional
-public class BookDaoImpl implements BookDAO {
+public class BookService {
 
-    @Autowired
+    @Resource(name="sessionFactory")
     private SessionFactory sessionFactory;
 
     private ProjectionList bookProjection;
@@ -33,7 +31,7 @@ public class BookDaoImpl implements BookDAO {
 
     private List<Book> books;
 
-    public BookDaoImpl() {
+/*    public BookService() {
         bookProjection = Projections.projectionList();
         bookProjection.add(Projections.property("id"), "id");
         bookProjection.add(Projections.property("title"), "title");
@@ -42,7 +40,7 @@ public class BookDaoImpl implements BookDAO {
         bookProjection.add(Projections.property("isbn"), "isbn");
         bookProjection.add(Projections.property("printYear"), "printYear");
         bookProjection.add(Projections.property("readAlready"), "readAlready");
-    }
+    }*/
 
     private List<Book> createBookList(DetachedCriteria bookListCriteria) {
         Criteria criteria = bookListCriteria.getExecutableCriteria(sessionFactory.getCurrentSession());
@@ -59,12 +57,12 @@ public class BookDaoImpl implements BookDAO {
         //Transaction tx = session.beginTransaction();
 
         // 1.
-        DetachedCriteria bookListCriteria = DetachedCriteria.forClass(Book.class, "b");
+        /*DetachedCriteria bookListCriteria = DetachedCriteria.forClass(Book.class, "b");
         List<Book> books = createBookList(bookListCriteria);
 
         // 2.
         List<Book> result = (List<Book>) session.createQuery("from Book").list();
-
+*/
         // 3.
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Book> query = builder.createQuery(Book.class);
@@ -151,6 +149,4 @@ public class BookDaoImpl implements BookDAO {
         // Save updates
         session.save(existingBook);
     }
-
 }
-
