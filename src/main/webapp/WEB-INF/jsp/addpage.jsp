@@ -7,42 +7,51 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Книжная полка</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="import" href="/nav.jsp">
 </head>
 <body>
+  <c:import url="nav.jsp"/>
+  <c:url var="saveUrl" value="/bookshell/main/books/add" />
 
-<h1>Создание новой книги</h1>
+  <form:form modelAttribute="bookAttribute" method="POST" action="${saveUrl}">
+    <div class="container">
+      <div class="row">
+        <div class="col"></div>
+        <div class="form-group col-6">
+          <div class="control-group required">
 
-<c:url var="saveUrl" value="/bookshell/main/books/add" />
-<form:form modelAttribute="bookAttribute" method="POST" action="${saveUrl}">
-  <table>
-    <tr>
-      <td><form:label path="title">Название</form:label></td>
-      <td><form:input path="title"/></td>
-    </tr>
+            <div class="form-group">
+              <label for="title">Название</label>
+              <form:input path="title" type="text" class="form-control" aria-describedby="titleHelp" placeholder="Введите название произведения"/>
+            </div>
 
-    <tr>
-      <td><form:label path="author">Автор</form:label></td>
-      <td><form:input path="author"/></td>
-    </tr>
+            <div class="form-group">
+              <label for="author">Автор</label>
+              <form:input path="author" type="text" class="form-control" aria-describedby="authorHelp" placeholder="Введите автора произведения"/>
+            </div>
 
-    <tr>
-      <td><form:label path="isbn">ISBN</form:label></td>
-      <td><form:input path="isbn"/></td>
-    </tr>
+            <div class="form-group">
+              <label for="isbn">ISBN</label>
+              <form:input path="isbn" type="text" class="form-control" aria-describedby="isbnHelp" placeholder="Введите ISBN произведения"/>
+            </div>
 
-    <tr>
-      <td><form:label path="printYear">Год издания</form:label></td>
-      <td><form:input path="printYear"/></td>
-    </tr>
+            <div class="form-group">
+              <label for="printYear">Год издания</label>
+              <form:input path="printYear" type="text" class="form-control" aria-describedby="printYearHelp" placeholder="Введите год издания"/>
+            </div>
 
-    <tr>
-      <td><form:label path="description">Описание</form:label></td>
-      <td><form:input path="description"/></td>
-    </tr>
-  </table>
+            <div class="form-group">
+              <label for="description">Описание</label>
+              <form:input path="description" type="text" class="form-control" aria-describedby="descriptionHelp" placeholder="Введите описание произведения"/>
+            </div>
 
-  <input type="submit" value="Save" />
-</form:form>
-
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+          </div>
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
+  </form:form>
 </body>
 </html>
