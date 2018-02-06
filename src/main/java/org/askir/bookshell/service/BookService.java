@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("bookService")
@@ -25,26 +26,14 @@ public class BookService {
     @Resource(name="sessionFactory")
     private SessionFactory sessionFactory;
 
-    private ProjectionList bookProjection;
+    //private ProjectionList bookProjection;
 
     protected static Logger logger = Logger.getLogger("service");
 
     private List<Book> books;
 
-/*    public BookService() {
-        bookProjection = Projections.projectionList();
-        bookProjection.add(Projections.property("id"), "id");
-        bookProjection.add(Projections.property("title"), "title");
-        bookProjection.add(Projections.property("description"), "description");
-        bookProjection.add(Projections.property("author"), "author");
-        bookProjection.add(Projections.property("isbn"), "isbn");
-        bookProjection.add(Projections.property("printYear"), "printYear");
-        bookProjection.add(Projections.property("readAlready"), "readAlready");
-    }*/
-
     private List<Book> createBookList(DetachedCriteria bookListCriteria) {
         Criteria criteria = bookListCriteria.getExecutableCriteria(sessionFactory.getCurrentSession());
-        criteria.addOrder(Order.asc("b.title")).setProjection(bookProjection).setResultTransformer(Transformers.aliasToBean(Book.class));
         return criteria.list();
     }
 
@@ -82,24 +71,46 @@ public class BookService {
     }
 
     @Transactional
-    public List<Book> getBooks(String searchString) {
+    public List<Book> getBooks(String typeSearch, String valueSearch) {
 
         logger.debug("Retrieving searching books");
 
-        String[] params = searchString.split("=");
         List<Book> books = null;
 
-        if(params[0].equals("printYear")) {
-            Integer printYear = Integer.parseInt(params[1]);
-            books = createBookList(createBookCriteria().add(Restrictions.eq("b." + params[0], printYear)));
+        String fieldName = "";
+        if(typeSearch.equals("Автор"))
+            fieldName = "author";
+
+        if(typeSearch.equals("Название"))
+            fieldName = "title";
+
+        if(typeSearch.equals("ISBN"))
+            fieldName = "isbn";
+
+        if(typeSearch.equals("Описание"))
+            fieldName = "description";
+
+        if(typeSearch.equals("Год издания"))
+            fieldName = "printYear";
+
+        if(!fieldName.isEmpty()) {
+            if (fieldName.equals("printYear")) {
+                try {
+                    Integer printYear = Integer.parseInt(valueSearch);
+                    books = createBookList(createBookCriteria().add(Restrictions.eq("b." + fieldName, printYear)));
+                }
+                catch (NumberFormatException e) {
+                }
+            } else if (fieldName.equals("readAlready")) {
+                Byte readAlready = Byte.parseByte(valueSearch);
+                books = createBookList(createBookCriteria().add(Restrictions.eq("b." + fieldName, readAlready)));
+            } else {
+                books = createBookList(createBookCriteria().add(Restrictions.ilike("b." + fieldName, valueSearch, MatchMode.ANYWHERE)));
+            }
         }
-        else if(params[0].equals("readAlready")) {
-            Byte readAlready = Byte.parseByte(params[1]);
-            books = createBookList(createBookCriteria().add(Restrictions.eq("b." + params[0], readAlready)));
-        }
-        else {
-            books = createBookList(createBookCriteria().add(Restrictions.ilike("b." + params[0], params[1], MatchMode.ANYWHERE)));
-        }
+
+        if(books == null)
+            books = new ArrayList<Book>();
         return books;
     }
 

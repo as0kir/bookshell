@@ -13,47 +13,48 @@
   <title>Книжная полка</title>
 </head>
 <body>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <c:import url="nav.jsp"/>
 
-<c:url var="addUrl" value="/bookshell/main/books/add" />
-<table style="border: 1px solid; text-align:center">
-  <thead style="background:#fcf">
-  <tr>
-    <th>Автор</th>
-    <th>Название</th>
-    <th>ISBN</th>
-    <th>Год издания</th>
-    <th>Описание</th>
-    <th>Прочитана</th>
-    <th colspan="3"></th>
-  </tr>
-  </thead>
-  <tbody>
-  <c:forEach items="${books}" var="book">
-    <c:url var="editUrl" value="/bookshell/main/books/edit?id=${book.id}" />
-    <c:url var="deleteUrl" value="/bookshell/main/books/delete?id=${book.id}" />
-    <tr>
-      <td><c:out value="${book.author}" /></td>
-      <td><c:out value="${book.title}" /></td>
-      <td><c:out value="${book.printYear}" /></td>
-      <td><c:out value="${book.isbn}" /></td>
-      <td><c:out value="${book.description}" /></td>
-      <td><c:out value="${book.readAlready}" /></td>
+  <div class="container-fluid">
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th>Автор</th>
+          <th>Название</th>
+          <th>ISBN</th>
+          <th>Год издания</th>
+          <th>Описание</th>
+          <th>Прочитана</th>
+          <th colspan="2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <c:forEach items="${books}" var="book">
+          <c:url var="editUrl" value="/bookshell/main/books/edit?id=${book.id}" />
+          <c:url var="deleteUrl" value="/bookshell/main/books/delete?id=${book.id}" />
+          <tr>
+            <td><c:out value="${book.author}" /></td>
+            <td><c:out value="${book.title}" /></td>
+            <td width=150><c:out value="${book.isbn}" /></td>
+            <td width=150><c:out value="${book.printYear}" /></td>
+            <td><c:out value="${book.description}" /></td>
+            <td><c:out value="${book.readAlready}" /></td>
 
-      <td><a href="${editUrl}">Редактировать</a></td>
-      <td><a href="${deleteUrl}">Удалить</a></td>
-      <td><a href="${addUrl}">Добавить</a></td>
-    </tr>
-  </c:forEach>
-  </tbody>
-</table>
+            <td width=100><a href="${editUrl}">Редактировать</a></td>
+            <td width=100><a href="${deleteUrl}">Удалить</a></td>
+          </tr>
+        </c:forEach>
+      </tbody>
+    </table>
+  </div>
 
-<c:if test="${empty books}">
-  Нет книг в списке. <a href="${addUrl}">Добавить</a> книгу.
-</c:if>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <c:forEach items="${pages}" var="page">
+        <li class="page-item"><a class="page-link" href="#">${page}</a></li>
+      </c:forEach>
+    </ul>
+  </nav>
 
 </body>
 </html>
