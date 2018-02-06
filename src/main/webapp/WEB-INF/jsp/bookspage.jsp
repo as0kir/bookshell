@@ -5,18 +5,21 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Insert title here</title>
+  <title>Книжная полка</title>
 </head>
 <body>
-<h1>Books</h1>
+<h1>Книжная полка</h1>
 
 <c:url var="addUrl" value="/bookshell/main/books/add" />
-<table style="border: 1px solid; width: 500px; text-align:center">
+<table style="border: 1px solid; text-align:center">
   <thead style="background:#fcf">
   <tr>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Money</th>
+    <th>Автор</th>
+    <th>Название</th>
+    <th>ISBN</th>
+    <th>Год издания</th>
+    <th>Описание</th>
+    <th>Прочитана</th>
     <th colspan="3"></th>
   </tr>
   </thead>
@@ -25,18 +28,23 @@
     <c:url var="editUrl" value="/bookshell/main/books/edit?id=${book.id}" />
     <c:url var="deleteUrl" value="/bookshell/main/books/delete?id=${book.id}" />
     <tr>
-      <td><c:out value="${book.title}" /></td>
       <td><c:out value="${book.author}" /></td>
-      <td><a href="${editUrl}">Edit</a></td>
-      <td><a href="${deleteUrl}">Delete</a></td>
-      <td><a href="${addUrl}">Add</a></td>
+      <td><c:out value="${book.title}" /></td>
+      <td><c:out value="${book.printYear}" /></td>
+      <td><c:out value="${book.isbn}" /></td>
+      <td><c:out value="${book.description}" /></td>
+      <td><c:out value="${book.readAlready}" /></td>
+
+      <td><a href="${editUrl}">Редактировать</a></td>
+      <td><a href="${deleteUrl}">Удалить</a></td>
+      <td><a href="${addUrl}">Добавить</a></td>
     </tr>
   </c:forEach>
   </tbody>
 </table>
 
 <c:if test="${empty books}">
-  There are currently no books in the list. <a href="${addUrl}">Add</a> a book.
+  Нет книг в списке. <a href="${addUrl}">Добавить</a> книгу.
 </c:if>
 
 </body>

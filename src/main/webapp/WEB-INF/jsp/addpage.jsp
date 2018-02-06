@@ -6,27 +6,37 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Insert title here</title>
+  <title>Книжная полка</title>
 </head>
 <body>
 
-<h1>Create New Book</h1>
+<h1>Создание новой книги</h1>
 
 <c:url var="saveUrl" value="/bookshell/main/books/add" />
 <form:form modelAttribute="bookAttribute" method="POST" action="${saveUrl}">
   <table>
     <tr>
-      <td><form:label path="title">Title:</form:label></td>
+      <td><form:label path="title">Название</form:label></td>
       <td><form:input path="title"/></td>
     </tr>
 
     <tr>
-      <td><form:label path="author">Author</form:label></td>
+      <td><form:label path="author">Автор</form:label></td>
       <td><form:input path="author"/></td>
     </tr>
 
     <tr>
-      <td><form:label path="description">Description</form:label></td>
+      <td><form:label path="isbn">ISBN</form:label></td>
+      <td><form:input path="isbn"/></td>
+    </tr>
+
+    <tr>
+      <td><form:label path="printYear">Год издания</form:label></td>
+      <td><form:input path="printYear"/></td>
+    </tr>
+
+    <tr>
+      <td><form:label path="description">Описание</form:label></td>
       <td><form:input path="description"/></td>
     </tr>
   </table>
