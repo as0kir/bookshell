@@ -33,6 +33,7 @@
         <option <c:if test="${searchAttribute.typeSearch=='ISBN'}">selected</c:if>>ISBN</option>
         <option <c:if test="${searchAttribute.typeSearch=='Описание'}">selected</c:if>>Описание</option>
         <option <c:if test="${searchAttribute.typeSearch=='Год издания'}">selected</c:if>>Год издания</option>
+        <option <c:if test="${searchAttribute.typeSearch=='Прочитана'}">selected</c:if>>Прочитана</option>
       </form:select>
 
       <form:input path="valueSearch" class="form-control mr-sm-2" type="text" placeholder="Поиск" aria-label="Поиск"/>

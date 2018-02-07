@@ -2,6 +2,7 @@ package org.askir.bookshell.service;
 
 import org.apache.log4j.Logger;
 import org.askir.bookshell.domain.Book;
+import org.askir.bookshell.domain.Search;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -69,41 +70,47 @@ public class BookService {
     }
 
     @Transactional
-    public List<Book> getBooks(String typeSearch, String valueSearch) {
+    public List<Book> getBooks(Search search) {
 
         logger.debug("Retrieving searching books");
 
         List<Book> books = null;
 
         String fieldName = "";
-        if(typeSearch.equals("Автор"))
+        if(search.getTypeSearch().equals("Автор"))
             fieldName = "author";
 
-        if(typeSearch.equals("Название"))
+        if(search.getTypeSearch().equals("Название"))
             fieldName = "title";
 
-        if(typeSearch.equals("ISBN"))
+        if(search.getTypeSearch().equals("ISBN"))
             fieldName = "isbn";
 
-        if(typeSearch.equals("Описание"))
+        if(search.getTypeSearch().equals("Описание"))
             fieldName = "description";
 
-        if(typeSearch.equals("Год издания"))
+        if(search.getTypeSearch().equals("Год издания"))
             fieldName = "printYear";
+
+        if(search.getTypeSearch().equals("Прочитана"))
+            fieldName = "readAlready";
 
         if(!fieldName.isEmpty()) {
             if (fieldName.equals("printYear")) {
                 try {
-                    Integer printYear = Integer.parseInt(valueSearch);
+                    Integer printYear = Integer.parseInt(search.getValueSearch());
                     books = createBookList(createBookCriteria().add(Restrictions.eq("b." + fieldName, printYear)));
                 }
                 catch (NumberFormatException e) {
                 }
             } else if (fieldName.equals("readAlready")) {
-                Byte readAlready = Byte.parseByte(valueSearch);
-                books = createBookList(createBookCriteria().add(Restrictions.eq("b." + fieldName, readAlready)));
+                String valueSearch = search.getValueSearch().toUpperCase();
+                if(valueSearch.equals("ДА") || valueSearch.equals("НЕТ")){
+                    Byte readAlready = (byte)(valueSearch.equals("ДА") ? 1 : 0);
+                    books = createBookList(createBookCriteria().add(Restrictions.eq("b." + fieldName, readAlready)));
+                }
             } else {
-                books = createBookList(createBookCriteria().add(Restrictions.ilike("b." + fieldName, valueSearch, MatchMode.ANYWHERE)));
+                books = createBookList(createBookCriteria().add(Restrictions.ilike("b." + fieldName, search.getValueSearch(), MatchMode.ANYWHERE)));
             }
         }
 
@@ -114,12 +121,14 @@ public class BookService {
 
     public Book get( Integer id ) {
         Session session = sessionFactory.getCurrentSession();
-        Book book = (Book) session.get(Book.class, id);
+        Book book = session.get(Book.class, id);
         return book;
     }
 
     public void add(Book book) {
         logger.debug("Adding new book");
+        book.setReadAlready((byte)0);
+
         if(book.getAuthor().isEmpty())
             throw new RuntimeException("Не заполнен автор произведения");
 
@@ -132,16 +141,16 @@ public class BookService {
         if(book.getDescription().isEmpty())
             throw new RuntimeException("Не заполнено описание произведения");
 
-
         Session session = sessionFactory.getCurrentSession();
         session.save(book);
     }
 
-
     public void delete(Integer id) {
         logger.debug("Deleting existing book");
         Session session = sessionFactory.getCurrentSession();
+
         Book book = (Book) session.get(Book.class, id);
+
         session.delete(book);
     }
 
@@ -154,9 +163,20 @@ public class BookService {
         existingBook.setDescription(book.getDescription());
         existingBook.setIsbn(book.getIsbn());
         existingBook.setPrintYear(book.getPrintYear());
-        existingBook.setReadAlready(book.getReadAlready());
         existingBook.setTitle(book.getTitle());
 
         session.save(existingBook);
+    }
+
+    public byte editReadAlready(Integer id) {
+        logger.debug("Editing readAlready existing book");
+        Session session = sessionFactory.getCurrentSession();
+
+        Book book = session.get(Book.class, id);
+        byte newValue = (byte)(book.getReadAlready()==1 ? 0 : 1);
+        book.setReadAlready(newValue);
+
+        session.save(book);
+        return newValue;
     }
 }

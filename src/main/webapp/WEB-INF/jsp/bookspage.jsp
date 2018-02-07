@@ -32,14 +32,14 @@
         <c:forEach items="${books}" var="book">
           <c:url var="editUrl" value="/bookshell/main/books/edit?id=${book.id}" />
           <c:url var="deleteUrl" value="/bookshell/main/books/delete?id=${book.id}" />
+          <c:url var="readAlreadyUrl" value="/bookshell/main/books/readalready?id=${book.id}" />
           <tr>
             <td><c:out value="${book.author}" /></td>
             <td><c:out value="${book.title}" /></td>
             <td width=150><c:out value="${book.isbn}" /></td>
             <td width=150><c:out value="${book.printYear}" /></td>
             <td><c:out value="${book.description}" /></td>
-            <td><c:out value="${book.readAlready}" /></td>
-
+            <td width=100><a href="${readAlreadyUrl}"><c:if test="${book.readAlready==0}">Нет</c:if><c:if test="${book.readAlready==1}">Да</c:if></a></td>
             <td width=100><a href="${editUrl}">Редактировать</a></td>
             <td width=100><a href="${deleteUrl}">Удалить</a></td>
           </tr>

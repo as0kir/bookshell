@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class MainController {
         logger.debug("Received request to show searching books");
         this.search = search;
 
-        List<Book> books = bookService.getBooks(search.getTypeSearch(), search.getValueSearch());
+        List<Book> books = bookService.getBooks(search);
         model.addAttribute("books", books);
         for (int i = 1; i <= books.size()/10+1; i++) {
             pages.add(i);
@@ -115,6 +114,17 @@ public class MainController {
         model.addAttribute("id", id);
         model.addAttribute("searchAttribute", search);
         return "editedpage";
+    }
+
+    @RequestMapping(value = "/books/readalready", method = RequestMethod.GET)
+    public String getEditReadAlready(@RequestParam(value="id", required=true) Integer id, Model model) {
+        logger.debug("Received request to show edit readAlready page");
+        byte newValue = bookService.editReadAlready(id);
+        model.addAttribute("bookAttribute", bookService.get(id));
+        model.addAttribute("searchAttribute", search);
+        model.addAttribute("newValue", newValue);
+        model.addAttribute("id", id);
+        return "readalready";
     }
 
     @ExceptionHandler(Exception.class)
