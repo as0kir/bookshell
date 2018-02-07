@@ -76,27 +76,27 @@ public class BookService {
 
         List<Book> books = null;
 
-        if(search.getTypeSearch() == null){
+        if(search.getTypeSearch() == null || search.getTypeSearch().isEmpty() || search.getValueSearch() == null || search.getValueSearch().isEmpty()){
             books = createBookList(createBookCriteria());
         }
         else {
             String fieldName = "";
-            if (search.getTypeSearch() != null && search.getTypeSearch().equals("Автор"))
+            if (search.getTypeSearch().equals("Автор"))
                 fieldName = "author";
 
-            if (search.getTypeSearch() != null && search.getTypeSearch().equals("Название"))
+            if (search.getTypeSearch().equals("Название"))
                 fieldName = "title";
 
-            if (search.getTypeSearch() != null && search.getTypeSearch().equals("ISBN"))
+            if (search.getTypeSearch().equals("ISBN"))
                 fieldName = "isbn";
 
-            if (search.getTypeSearch() != null && search.getTypeSearch().equals("Описание"))
+            if (search.getTypeSearch().equals("Описание"))
                 fieldName = "description";
 
-            if (search.getTypeSearch() != null && search.getTypeSearch().equals("Год издания"))
+            if (search.getTypeSearch().equals("Год издания"))
                 fieldName = "printYear";
 
-            if (search.getTypeSearch() != null && search.getTypeSearch().equals("Прочитана"))
+            if (search.getTypeSearch().equals("Прочитана"))
                 fieldName = "readAlready";
 
             if (!fieldName.isEmpty()) {

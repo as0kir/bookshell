@@ -48,6 +48,8 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Сохранить</button>
+            <input type="button" class="btn btn-primary" onclick="history.back()" value="Назад">
+
           </div>
         </div>
         <div class="col"></div>

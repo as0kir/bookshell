@@ -135,10 +135,23 @@ public class MainController {
     public String saveEdit(@ModelAttribute("bookAttribute") Book book, @RequestParam(value="id", required=true) Integer id, Model model) {
         logger.debug("Received request to update book");
         book.setId(id);
-        bookService.edit(book);
         model.addAttribute("id", id);
         model.addAttribute("searchAttribute", search);
-        return "editedpage";
+
+        try {
+            bookService.edit(book);
+            return "editedpage";
+        }
+        catch (DataIntegrityViolationException e)
+        {
+            model.addAttribute("error", e.getCause().getCause());
+            return "errorpage";
+        }
+        catch (RuntimeException e)
+        {
+            model.addAttribute("error", e.getMessage());
+            return "errorpage";
+        }
     }
 
     @RequestMapping(value = "/books/readalready", method = RequestMethod.GET)
