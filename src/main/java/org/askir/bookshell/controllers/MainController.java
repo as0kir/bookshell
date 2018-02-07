@@ -20,7 +20,7 @@ import java.util.List;
 public class MainController {
 
     protected static Logger logger = Logger.getLogger("controller");
-    private final Search search = new Search();
+    private Search search = new Search();
 
     @Resource(name="bookService")
     private BookService bookService;
@@ -46,6 +46,7 @@ public class MainController {
         List<Integer> pages = new ArrayList<Integer>();
 
         logger.debug("Received request to show searching books");
+        this.search = search;
 
         List<Book> books = bookService.getBooks(search.getTypeSearch(), search.getValueSearch());
         model.addAttribute("books", books);
@@ -112,18 +113,15 @@ public class MainController {
         book.setId(id);
         bookService.edit(book);
         model.addAttribute("id", id);
+        model.addAttribute("searchAttribute", search);
         return "editedpage";
     }
 
     @ExceptionHandler(Exception.class)
     public ModelAndView handleIOException(Exception exception) {
-        ModelAndView modelAndView = new ModelAndView("/books/errorpage");
-        modelAndView.addObject("message", exception.getMessage());
+        ModelAndView modelAndView = new ModelAndView("errorpage");
+        modelAndView.addObject("error", exception.getMessage());
+        modelAndView.addObject("searchAttribute", search);
         return modelAndView;
     }
-/*
-    @ExceptionHandler(Exception.class)
-    public void handleExceptions(Exception anExc) {
-        anExc.printStackTrace(); // do something better than this ;)
-    }*/
 }

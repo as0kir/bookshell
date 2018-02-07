@@ -6,15 +6,29 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Книжная полка</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="import" href="/nav.jsp">
 </head>
 <body>
 
-<h1>Книги</h1>
-
-<p>Вы удалили книгу с id ${id} в <%= new java.util.Date() %></p>
-
+<c:import url="nav.jsp"/>
 <c:url var="mainUrl" value="/bookshell/main/books" />
-<p>Вернуться в <a href="${mainUrl}">Главный список</a></p>
+<div style="height:50px;"></div>
+
+<div class="container">
+  <div class="row">
+    <div class="col"></div>
+    <div class="form-group col-6">
+      <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Удаление</h4>
+        <p>Вы удалили книгу с id ${id}</p>
+        <hr>
+        <p class="mb-0">Вернуться в <a href="${mainUrl}" class="alert-link">Главный список</a></p>
+      </div>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
 
 </body>
 </html>

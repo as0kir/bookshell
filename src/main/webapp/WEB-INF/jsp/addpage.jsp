@@ -13,6 +13,7 @@
 <body>
   <c:import url="nav.jsp"/>
   <c:url var="saveUrl" value="/bookshell/main/books/add" />
+  <div style="height:50px;"></div>
 
   <form:form modelAttribute="bookAttribute" method="POST" action="${saveUrl}">
     <div class="container">
