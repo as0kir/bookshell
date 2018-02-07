@@ -23,13 +23,13 @@
           <div class="control-group required">
 
             <div class="form-group">
-              <label for="title">Название</label>
-              <form:input path="title" type="text" class="form-control" aria-describedby="titleHelp" placeholder="Введите название произведения"/>
+              <label for="author">Автор</label>
+              <form:input path="author" type="text" class="form-control" aria-describedby="titleHelp" placeholder="Только для чтения" readonly="true"/>
             </div>
 
             <div class="form-group">
-              <label for="author">Автор</label>
-              <form:input path="author" type="text" class="form-control" aria-describedby="authorHelp" placeholder="Введите автора произведения"/>
+              <label for="title">Название</label>
+              <form:input path="title" type="text" class="form-control" aria-describedby="titleHelp" placeholder="Введите название произведения"/>
             </div>
 
             <div class="form-group">

@@ -76,46 +76,50 @@ public class BookService {
 
         List<Book> books = null;
 
-        String fieldName = "";
-        if(search.getTypeSearch().equals("Автор"))
-            fieldName = "author";
+        if(search.getTypeSearch() == null){
+            books = createBookList(createBookCriteria());
+        }
+        else {
+            String fieldName = "";
+            if (search.getTypeSearch() != null && search.getTypeSearch().equals("Автор"))
+                fieldName = "author";
 
-        if(search.getTypeSearch().equals("Название"))
-            fieldName = "title";
+            if (search.getTypeSearch() != null && search.getTypeSearch().equals("Название"))
+                fieldName = "title";
 
-        if(search.getTypeSearch().equals("ISBN"))
-            fieldName = "isbn";
+            if (search.getTypeSearch() != null && search.getTypeSearch().equals("ISBN"))
+                fieldName = "isbn";
 
-        if(search.getTypeSearch().equals("Описание"))
-            fieldName = "description";
+            if (search.getTypeSearch() != null && search.getTypeSearch().equals("Описание"))
+                fieldName = "description";
 
-        if(search.getTypeSearch().equals("Год издания"))
-            fieldName = "printYear";
+            if (search.getTypeSearch() != null && search.getTypeSearch().equals("Год издания"))
+                fieldName = "printYear";
 
-        if(search.getTypeSearch().equals("Прочитана"))
-            fieldName = "readAlready";
+            if (search.getTypeSearch() != null && search.getTypeSearch().equals("Прочитана"))
+                fieldName = "readAlready";
 
-        if(!fieldName.isEmpty()) {
-            if (fieldName.equals("printYear")) {
-                try {
-                    Integer printYear = Integer.parseInt(search.getValueSearch());
-                    books = createBookList(createBookCriteria().add(Restrictions.eq("b." + fieldName, printYear)));
+            if (!fieldName.isEmpty()) {
+                if (fieldName.equals("printYear")) {
+                    try {
+                        Integer printYear = Integer.parseInt(search.getValueSearch());
+                        books = createBookList(createBookCriteria().add(Restrictions.eq("b." + fieldName, printYear)));
+                    } catch (NumberFormatException e) {
+                    }
+                } else if (fieldName.equals("readAlready")) {
+                    String valueSearch = search.getValueSearch().toUpperCase();
+                    if (valueSearch.equals("ДА") || valueSearch.equals("НЕТ")) {
+                        Byte readAlready = (byte) (valueSearch.equals("ДА") ? 1 : 0);
+                        books = createBookList(createBookCriteria().add(Restrictions.eq("b." + fieldName, readAlready)));
+                    }
+                } else {
+                    books = createBookList(createBookCriteria().add(Restrictions.ilike("b." + fieldName, search.getValueSearch(), MatchMode.ANYWHERE)));
                 }
-                catch (NumberFormatException e) {
-                }
-            } else if (fieldName.equals("readAlready")) {
-                String valueSearch = search.getValueSearch().toUpperCase();
-                if(valueSearch.equals("ДА") || valueSearch.equals("НЕТ")){
-                    Byte readAlready = (byte)(valueSearch.equals("ДА") ? 1 : 0);
-                    books = createBookList(createBookCriteria().add(Restrictions.eq("b." + fieldName, readAlready)));
-                }
-            } else {
-                books = createBookList(createBookCriteria().add(Restrictions.ilike("b." + fieldName, search.getValueSearch(), MatchMode.ANYWHERE)));
             }
         }
-
-        if(books == null)
+        if (books == null)
             books = new ArrayList<Book>();
+
         return books;
     }
 
@@ -158,12 +162,24 @@ public class BookService {
         logger.debug("Editing existing book");
         Session session = sessionFactory.getCurrentSession();
 
+        if(book.getTitle().isEmpty())
+            throw new RuntimeException("Не заполнено название произведения");
+
+        if(book.getIsbn().isEmpty())
+            throw new RuntimeException("Не заполнен ISBN");
+
+        if(book.getDescription().isEmpty())
+            throw new RuntimeException("Не заполнено описание произведения");
+
+        if(book.getPrintYear() == null)
+            throw new RuntimeException("Не заполнен год измения");
+
         Book existingBook = (Book) session.get(Book.class, book.getId());
-        existingBook.setAuthor(book.getAuthor());
         existingBook.setDescription(book.getDescription());
         existingBook.setIsbn(book.getIsbn());
         existingBook.setPrintYear(book.getPrintYear());
         existingBook.setTitle(book.getTitle());
+        book.setReadAlready((byte)0);
 
         session.save(existingBook);
     }

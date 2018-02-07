@@ -29,14 +29,16 @@ public class MainController {
         List<Integer> pages = new ArrayList<Integer>();
 
         logger.debug("Received request to show all books");
-        List<Book> books = bookService.getBooks();
-        model.addAttribute("books", books);
+        List<Book> books = bookService.getBooks(search);
+        List<Book> subBooks = books.subList(0, 10>books.size()?books.size():10);
+        model.addAttribute("books", subBooks);
         model.addAttribute("searchAttribute", search);
 
         for (int i = 1; i <= books.size()/10+1; i++) {
             pages.add(i);
         }
         model.addAttribute("pages", pages);
+        model.addAttribute("cpage", 1);
         return "bookspage";
     }
 
@@ -48,11 +50,34 @@ public class MainController {
         this.search = search;
 
         List<Book> books = bookService.getBooks(search);
-        model.addAttribute("books", books);
+        List<Book> subBooks = books.subList(0, 10>books.size()?books.size():10);
+        model.addAttribute("books", subBooks);
+
         for (int i = 1; i <= books.size()/10+1; i++) {
             pages.add(i);
         }
         model.addAttribute("pages", pages);
+        model.addAttribute("cpage", 1);
+        return "bookspage";
+    }
+
+
+    @RequestMapping(value = "/books/page", method = RequestMethod.GET)
+    public String getBooksOnPage(@RequestParam(value="id", required=true) Integer id, Model model) {
+        List<Integer> pages = new ArrayList<Integer>();
+
+        logger.debug("Received request to show searching books");
+
+        List<Book> books = bookService.getBooks(search);
+        List<Book> subBooks = books.subList((id-1)*10, id*10>books.size()?books.size():id*10);
+
+        model.addAttribute("books", subBooks);
+        for (int i = 1; i <= books.size()/10+1; i++) {
+            pages.add(i);
+        }
+        model.addAttribute("searchAttribute", search);
+        model.addAttribute("pages", pages);
+        model.addAttribute("cpage", id);
         return "bookspage";
     }
 

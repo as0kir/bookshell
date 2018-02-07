@@ -39,7 +39,7 @@
             <td width=150><c:out value="${book.isbn}" /></td>
             <td width=150><c:out value="${book.printYear}" /></td>
             <td><c:out value="${book.description}" /></td>
-            <td width=100><a href="${readAlreadyUrl}"><c:if test="${book.readAlready==0}">Нет</c:if><c:if test="${book.readAlready==1}">Да</c:if></a></td>
+            <td width=100><c:if test="${book.readAlready==0}"><a href="${readAlreadyUrl}">Нет</a></c:if><c:if test="${book.readAlready==1}">Да</c:if></td>
             <td width=100><a href="${editUrl}">Редактировать</a></td>
             <td width=100><a href="${deleteUrl}">Удалить</a></td>
           </tr>
@@ -48,13 +48,24 @@
     </table>
   </div>
 
-  <nav aria-label="Page navigation example">
-    <ul class="pagination">
-      <c:forEach items="${pages}" var="page">
-        <li class="page-item"><a class="page-link" href="#">${page}</a></li>
-      </c:forEach>
-    </ul>
-  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col"></div>
+      <div class="form-group col-6">
+
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <c:forEach items="${pages}" var="page">
+              <li class="page-item <c:if test="${cpage==page}">active</c:if>">
+                <a class="page-link" href="/bookshell/main/books/page?id=${page}">${page}</a>
+              </li>
+            </c:forEach>
+          </ul>
+        </nav>
+      </div>
+      <div class="col"></div>
+    </div>
+  </div>
 
 </body>
 </html>
