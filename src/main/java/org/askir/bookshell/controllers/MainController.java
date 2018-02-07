@@ -4,15 +4,14 @@ import org.apache.log4j.Logger;
 import org.askir.bookshell.domain.Book;
 import org.askir.bookshell.domain.Search;
 import org.askir.bookshell.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +46,7 @@ public class MainController {
         List<Integer> pages = new ArrayList<Integer>();
 
         logger.debug("Received request to show searching books");
+
         List<Book> books = bookService.getBooks(search.getTypeSearch(), search.getValueSearch());
         model.addAttribute("books", books);
         for (int i = 1; i <= books.size()/10+1; i++) {
@@ -65,16 +65,34 @@ public class MainController {
     }
 
     @RequestMapping(value = "/books/add", method = RequestMethod.POST)
-    public String add(@ModelAttribute("bookAttribute") Book book) {
+    public String add(@ModelAttribute("bookAttribute") Book book, Model model) {
         logger.debug("Received request to add new book");
-        bookService.add(book);
-        return "addedpage";
+        model.addAttribute("searchAttribute", search);
+        try {
+            bookService.add(book);
+            return "addedpage";
+        }
+        catch (DataIntegrityViolationException e)
+        {
+            model.addAttribute("error", e.getCause().getCause());
+            return "errorpage";
+        }
+        catch (RuntimeException e)
+        {
+            model.addAttribute("error", e.getMessage());
+            return "errorpage";
+        }
     }
 
     @RequestMapping(value = "/books/delete", method = RequestMethod.GET)
     public String delete(@RequestParam(value="id", required=true) Integer id, Model model) {
         logger.debug("Received request to delete existing book");
-        bookService.delete(id);
+        try {
+            bookService.delete(id);
+        }
+        catch (RuntimeException e){
+
+        }
         model.addAttribute("id", id);
         model.addAttribute("searchAttribute", search);
         return "deletedpage";
@@ -96,4 +114,16 @@ public class MainController {
         model.addAttribute("id", id);
         return "editedpage";
     }
+
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleIOException(Exception exception) {
+        ModelAndView modelAndView = new ModelAndView("/books/errorpage");
+        modelAndView.addObject("message", exception.getMessage());
+        return modelAndView;
+    }
+/*
+    @ExceptionHandler(Exception.class)
+    public void handleExceptions(Exception anExc) {
+        anExc.printStackTrace(); // do something better than this ;)
+    }*/
 }

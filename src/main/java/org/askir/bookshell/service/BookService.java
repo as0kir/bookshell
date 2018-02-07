@@ -7,8 +7,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.*;
 import org.hibernate.query.Query;
-import org.hibernate.transform.Transformers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -122,6 +120,19 @@ public class BookService {
 
     public void add(Book book) {
         logger.debug("Adding new book");
+        if(book.getAuthor().isEmpty())
+            throw new RuntimeException("Не заполнен автор произведения");
+
+        if(book.getTitle().isEmpty())
+            throw new RuntimeException("Не заполнено название произведения");
+
+        if(book.getIsbn().isEmpty())
+            throw new RuntimeException("Не заполнен ISBN");
+
+        if(book.getDescription().isEmpty())
+            throw new RuntimeException("Не заполнено описание произведения");
+
+
         Session session = sessionFactory.getCurrentSession();
         session.save(book);
     }
@@ -129,27 +140,16 @@ public class BookService {
 
     public void delete(Integer id) {
         logger.debug("Deleting existing book");
-
-        // Retrieve session from Hibernate
         Session session = sessionFactory.getCurrentSession();
-
-        // Retrieve existing book first
         Book book = (Book) session.get(Book.class, id);
-
-        // Delete
         session.delete(book);
     }
 
     public void edit(Book book) {
         logger.debug("Editing existing book");
-
-        // Retrieve session from Hibernate
         Session session = sessionFactory.getCurrentSession();
 
-        // Retrieve existing book via id
         Book existingBook = (Book) session.get(Book.class, book.getId());
-
-        // Assign updated values to this book
         existingBook.setAuthor(book.getAuthor());
         existingBook.setDescription(book.getDescription());
         existingBook.setIsbn(book.getIsbn());
@@ -157,7 +157,6 @@ public class BookService {
         existingBook.setReadAlready(book.getReadAlready());
         existingBook.setTitle(book.getTitle());
 
-        // Save updates
         session.save(existingBook);
     }
 }
